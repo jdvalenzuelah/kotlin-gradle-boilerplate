@@ -1,22 +1,13 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val coroutineVersion = "1.3.9"
-val logbackVersion = "1.2.3"
-
 val jUnitVersion = "5.6.2"
-val spekVersion = "2.0.12"
-val kluentVersion = "1.51"
-val easyRandomVersion = "4.2.0"
-val mockKVersion = "1.10.0"
+val tinyLogVersion = "2.3.1"
 
 plugins {
+    java
     application
-    kotlin("jvm") version "1.4.0"
-    id("io.gitlab.arturbosch.detekt").version("1.13.1")
-    id("com.github.johnrengelman.shadow").version("6.0.0")
-
-    jacoco
+    kotlin("jvm") version "1.5.10"
 }
 
 repositories {
@@ -25,57 +16,33 @@ repositories {
     jcenter()
 }
 
-group = "id.jasoet.boilerplate"
+group = "com.github.jdvalenzuelah"
 version = "1.0.0"
 
 application {
-    mainClassName = "id.jasoet.boilerplate.Application"
+    mainClassName = "com.github.jdvalenzuelah.MainKt"
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("org.tinylog:tinylog-api-kotlin:$tinyLogVersion")
+    implementation("org.tinylog:tinylog-impl:$tinyLogVersion")
+    implementation("org.tinylog:slf4j-tinylog:$tinyLogVersion")
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
-    testImplementation("org.amshove.kluent:kluent:$kluentVersion")
-    testImplementation("io.mockk:mockk:$mockKVersion")
-    testImplementation("org.jeasy:easy-random-core:$easyRandomVersion")
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spekVersion")
 }
 
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-tasks.jacocoTestReport {
-    group = "Reporting"
-    reports {
-        xml.isEnabled = true
-        html.isEnabled = true
-        csv.isEnabled = false
-    }
-}
-
-detekt {
-    toolVersion = "1.13.1"
-    input = files("src/main/java", "src/main/kotlin")
-    parallel = true
-    config = files("$rootDir/detekt.yml")
-    disableDefaultRuleSets = false
-    ignoreFailures = false
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.test {
-    finalizedBy(tasks.detekt, tasks.jacocoTestReport)
-
     useJUnitPlatform {
         includeEngines("junit-jupiter","spek2")
     }
@@ -88,11 +55,8 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
 
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
-
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
         apiVersion = "1.4"
         languageVersion = "1.4"
         allWarningsAsErrors = true

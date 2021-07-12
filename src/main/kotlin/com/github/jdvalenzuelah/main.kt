@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package id.jasoet.boilerplate
+package com.github.jdvalenzuelah
 
-import org.slf4j.LoggerFactory
+import org.tinylog.kotlin.Logger
 
-/**
- * Documentation of your class
- */
-object Application {
-    private val log = LoggerFactory.getLogger(Application::class.java)
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-        log.info("Some Log Message!")
-        println("Some Random Message!")
-    }
+fun main() {
+    Logger.info("Hello world!")
 }
